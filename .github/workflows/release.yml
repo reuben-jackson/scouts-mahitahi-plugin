@@ -41,7 +41,26 @@ jobs:
             found && /^## / { exit }
             found { print }
           ' CHANGELOG.md > release-notes.md
-          cat release-notes.md
+          cat >> release-notes.md <<'EOF'
+
+          ---
+
+          ## How to install
+
+          Download the zip for your browser below (under **Assets**), then:
+
+          **Chrome / Edge**
+          1. Unzip it to a folder you'll keep (don't delete or move it afterwards).
+          2. Go to `chrome://extensions` (Edge: `edge://extensions`) and turn on **Developer mode**.
+          3. Click **Load unpacked** and choose the unzipped folder.
+          4. Reload Mahi Tahi.
+
+          **Firefox 128+** (temporary until restart)
+          1. Unzip it, then go to `about:debugging#/runtime/this-firefox`.
+          2. Click **Load Temporary Add-on** and choose `manifest.json` in the folder.
+
+          Updating: download the new zip, replace the old folder's contents, then click the reload icon on the extension's card.
+          EOF
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
