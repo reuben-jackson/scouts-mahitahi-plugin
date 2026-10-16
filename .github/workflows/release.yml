@@ -1,0 +1,50 @@
+name: Release
+
+# Publishes a GitHub release with the Chrome, Edge and Firefox zips
+# whenever a version tag such as v1.6.0 is pushed.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check tag matches package.json version
+        run: |
+          if [ "v$(node -p "require('./package.json').version")" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version" >&2
+            exit 1
+          fi
+
+      - name: Syntax check
+        run: node --check src/content.js && node --check src/page-hook.js
+
+      - name: Build and zip
+        run: npm run package
+
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v v="$VERSION" '
+            $0 ~ "^## " v "( |$)" { found=1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          cat release-notes.md
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release-notes.md
+          files: dist/*.zip

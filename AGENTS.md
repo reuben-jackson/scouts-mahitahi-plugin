@@ -36,6 +36,7 @@ npm run bump -- patch|minor|major
 3. `npm run build`, load `dist/chrome` unpacked, test on Mahi Tahi.
 4. If the change uses an API that may differ in Firefox, check it still works there (Firefox 128+ is required for `world: "MAIN"` content scripts).
 5. Update README's feature table if features changed.
+6. Releases are cut by pushing a tag `vX.Y.Z` matching `package.json` (see README, "Versioning and releasing"); `.github/workflows/release.yml` builds and publishes. Never upload hand-built zips.
 
 There is no automated test suite (the portal needs a login). `node --check src/content.js` catches syntax errors.
 

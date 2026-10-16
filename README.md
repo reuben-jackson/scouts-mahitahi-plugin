@@ -93,7 +93,16 @@ The single source of truth for the version is `version` in `package.json`; the b
 1. `npm run bump -- minor` (or `patch` / `major`). This updates `package.json` and adds a stub entry to `CHANGELOG.md`.
 2. Fill in the changelog entry.
 3. `npm run package` and test the Chrome build.
-4. Commit, tag (`git tag v1.6.1`), push, and attach the zips from `dist/` to a GitHub release.
+4. Commit and push, then tag and push the tag:
+   ```bash
+   git tag v1.6.1
+   git push origin v1.6.1
+   ```
+5. The [Release workflow](.github/workflows/release.yml) then builds the zips and publishes a GitHub release automatically, using the matching `CHANGELOG.md` entry as the release notes. The tag must match the `package.json` version (with a `v` prefix) or the workflow fails.
+
+The first time, check the repository's **Settings > Actions > General > Workflow permissions** allows read and write (the workflow requests `contents: write` itself, which is normally enough).
+
+Share the link to the repository's **Releases** page with the community; users download the zip for their browser and follow the install steps above.
 
 ## Maintaining
 
