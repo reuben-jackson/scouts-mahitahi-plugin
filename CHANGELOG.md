@@ -1,6 +1,10 @@
-# Changelog
+﻿# Changelog
 
 Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking changes, MINOR for new features, PATCH for fixes (including fixes for Mahi Tahi page changes).
+
+## 1.6.1 - 2026-10-16
+
+- Added extension icons, a privacy policy (PRIVACY.md) and store listing text for submitting to the Chrome, Edge and Firefox stores.
 
 ## 1.6.0 - 2026-10-16
 
@@ -36,7 +40,7 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking ch
 ## 1.3.0
 
 - Added a Direct attendance reports panel that bypasses the Salesforce Flow form.
-- Added current-year Term 1–4 All Types report links for every captured Hawke Sea Scouts section.
+- Added current-year Term 1â€“4 All Types report links for every captured Hawke Sea Scouts section.
 - Highlights the current three-month term.
 
 ## 1.2.1
@@ -67,5 +71,6 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking ch
 
 - Added the Events-page Create Event shortcut below Overview.
 - Added compact top navigation with Workshops and Online Modules links.
-- Added the requested 30 × 30 status-icon styling.
+- Added the requested 30 Ã— 30 status-icon styling.
 - Retained member sorting, section filtering, name search and rerender handling.
+

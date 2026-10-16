@@ -1,6 +1,6 @@
 {
   "name": "scouts-mahitahi-plugin",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Browser extension that makes Scouts NZ Mahi Tahi easier and faster to use for leaders.",
   "private": true,
   "license": "MIT",
