@@ -1,0 +1,228 @@
+.mahi-tahi-helper-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+    padding: 0.75rem;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background: #f3f2f2;
+}
+
+.mahi-tahi-helper-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 10rem;
+}
+
+.mahi-tahi-helper-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #3e3e3c;
+}
+
+.mahi-tahi-helper-controls .slds-select,
+.mahi-tahi-helper-controls .slds-input {
+    min-height: 2rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background: white;
+    color: #181818;
+}
+
+.mahi-tahi-helper-search {
+    min-width: 14rem;
+}
+
+.mahi-tahi-helper-export {
+    min-height: 2rem;
+}
+
+.mahi-tahi-helper-count {
+    align-self: center;
+    color: #3e3e3c;
+    font-size: 0.75rem;
+}
+
+c-scgm_member[hidden] {
+    display: none !important;
+}
+
+img.controlStatusIcon,
+img.customControlApplyIcon {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+.mahi-tahi-helper-quick-links {
+    align-items: center;
+    background: #000;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    justify-content: center;
+    min-height: 34px;
+    padding: 3px 12px;
+    position: relative;
+    width: 100%;
+    z-index: 10000;
+}
+
+.mahi-tahi-helper-quick-links a {
+    align-items: center;
+    color: #fff !important;
+    display: flex;
+    font-size: 13px;
+    justify-content: center;
+    line-height: 1.2;
+    padding: 6px 10px;
+    text-align: center;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+.mahi-tahi-helper-quick-links a:hover,
+.mahi-tahi-helper-quick-links a:focus-visible {
+    background: #252525;
+    text-decoration: underline !important;
+}
+
+.mahi-tahi-helper-report-shortcuts {
+    background: #f3f2f2;
+    border-bottom: 1px solid #dddbda;
+    box-sizing: border-box;
+    color: #181818;
+    padding: 12px max(24px, calc((100% - 1180px) / 2));
+    position: relative;
+    width: 100%;
+    z-index: 9999;
+}
+
+.mahi-tahi-helper-report-shortcuts h2 {
+    color: #5f249f;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 3px;
+}
+
+.mahi-tahi-helper-report-shortcuts > p {
+    margin: 0 0 9px;
+}
+
+.mahi-tahi-helper-report-row {
+    align-items: center;
+    display: grid;
+    gap: 6px;
+    grid-template-columns: minmax(90px, 1fr) repeat(4, minmax(70px, 100px));
+    margin-top: 5px;
+    max-width: 560px;
+}
+
+.mahi-tahi-helper-report-row a {
+    background: #fff;
+    border: 1px solid #5f249f;
+    border-radius: 3px;
+    color: #5f249f !important;
+    padding: 5px 8px;
+    text-align: center;
+    text-decoration: none !important;
+}
+
+.mahi-tahi-helper-report-row a:hover,
+.mahi-tahi-helper-report-row a:focus-visible,
+.mahi-tahi-helper-report-row a.mahi-tahi-helper-current-term {
+    background: #5f249f;
+    color: #fff !important;
+}
+
+@media (max-width: 600px) {
+    .mahi-tahi-helper-report-row {
+        grid-template-columns: repeat(2, minmax(80px, 1fr));
+    }
+
+    .mahi-tahi-helper-report-row strong {
+        grid-column: 1 / -1;
+    }
+}
+
+.mahi-tahi-helper-create-event {
+    color: white !important;
+    cursor: pointer;
+    font: inherit;
+    justify-content: center;
+}
+
+.mahi-tahi-helper-event-filters {
+    align-items: end;
+    background: #f3f2f2;
+    border: 1px solid #dddbda;
+    border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 auto 14px;
+    max-width: 760px;
+    padding: 10px 12px;
+}
+
+.mahi-tahi-helper-event-filters .mahi-tahi-helper-field,
+.mahi-tahi-helper-event-statuses {
+    flex: 1 1 320px;
+    min-width: 0;
+}
+
+.mahi-tahi-helper-event-statuses {
+    align-items: center;
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin: 0;
+    padding: 0;
+}
+
+.mahi-tahi-helper-event-statuses legend {
+    flex-basis: 100%;
+    padding: 0;
+}
+
+.mahi-tahi-helper-event-statuses label {
+    align-items: center;
+    display: inline-flex;
+    font-size: 13px;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.mahi-tahi-helper-event-statuses input {
+    accent-color: #5f249f;
+    height: 16px;
+    margin: 0;
+    width: 16px;
+}
+
+.mahi-tahi-helper-event-filters .slds-select,
+.mahi-tahi-helper-event-filters .slds-input {
+    background: #fff;
+    border: 1px solid #dddbda;
+    border-radius: 4px;
+    color: #181818;
+    min-height: 34px;
+    padding: 5px 8px;
+    width: 100%;
+}
+
+.eventsGrid > c-events-hub-tile[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 720px) {
+    .mahi-tahi-helper-event-filters {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}

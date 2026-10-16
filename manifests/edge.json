@@ -1,0 +1,20 @@
+﻿{
+  "manifest_version": 3,
+  "name": "Mahi Tahi Helper",
+  "version": "__VERSION__",
+  "description": "Adds navigation, event, sorting, filtering, CSV export and style improvements to Mahi Tahi.",
+  "content_scripts": [
+    {
+      "matches": ["https://mahitahi.scouts.nz/*"],
+      "js": ["page-hook.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://mahitahi.scouts.nz/*"],
+      "css": ["styles.css"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

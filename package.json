@@ -1,0 +1,16 @@
+{
+  "name": "scouts-mahitahi-plugin",
+  "version": "1.6.0",
+  "description": "Browser extension that makes Scouts NZ Mahi Tahi easier and faster to use for leaders.",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "package": "node scripts/build.mjs --zip",
+    "bump": "node scripts/bump.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
