@@ -2,6 +2,12 @@
 
 Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking changes, MINOR for new features, PATCH for fixes (including fixes for Mahi Tahi page changes).
 
+## 1.7.0 - 2026-10-20
+
+- Added case-insensitive name search to the Achievements individual selection list.
+- Added All / Leader / Parent Helper filtering using explicit roles learned from visited group lists, held only in tab memory until refresh. Full role text is retained; unknown roles appear only under All.
+- Added an attendee status dropdown below Search attendees on event Participants pages: All, Attending, Not Attending and Invited. Works alongside the existing name search.
+
 ## 1.6.1 - 2026-10-16
 
 - Added extension icons, a privacy policy (PRIVACY.md) and store listing text for submitting to the Chrome, Edge and Firefox stores.

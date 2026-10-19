@@ -51,6 +51,32 @@ c-scgm_member[hidden] {
     display: none !important;
 }
 
+.mahi-tahi-helper-attendee-filter {
+    margin: 0.5rem 0;
+    min-width: 0;
+    width: 100%;
+}
+
+.mahi-tahi-helper-attendee-status {
+    width: 100%;
+}
+
+c-participant.mahi-tahi-helper-attendee-hidden {
+    display: none !important;
+}
+
+.mahi-tahi-helper-achievement-search {
+    flex-basis: 100%;
+    grid-column: 1 / -1;
+    box-sizing: border-box;
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.individualOptionContainer.mahi-tahi-helper-individual-hidden {
+    display: none !important;
+}
+
 img.controlStatusIcon,
 img.customControlApplyIcon {
     width: 30px !important;

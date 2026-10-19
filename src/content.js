@@ -22,6 +22,7 @@
         ["Help", "/s/help"]
     ];
     let attendanceSections = [];
+    const knownIndividualRoles = new Map();
     const eventFilters = {
         statuses: new Set(["Invited", "Attending", "Not Attending"]),
         search: ""
@@ -29,10 +30,13 @@
 
     /** Enhances every supported feature currently present on the page. */
     function enhancePage() {
+        rememberVisibleRoles();
         enhanceMemberLists();
         enhanceQuickLinks();
         enhanceEventsNavigation();
         enhanceEventFilters();
+        enhanceAttendeeFilters();
+        enhanceAchievementSearch();
         enhanceAttendanceReportDefaults();
         enhanceSingleAccountReportDefaults();
         enhanceAttendanceReportShortcuts();
@@ -395,6 +399,123 @@
             const matchesStatus = eventFilters.statuses.has(status);
             const matchesSearch = !searchText || searchableText.includes(searchText);
             tile.hidden = !(matchesStatus && matchesSearch);
+        });
+    }
+
+    /** Normalises displayed names for matching between group and achievement lists. */
+    function normaliseIndividualName(name) {
+        return name.normalize("NFKC").trim().replace(/\s+/g, " ").toLocaleLowerCase();
+    }
+
+    /** Remembers explicit roles from visited group lists in this tab's memory only. */
+    function rememberVisibleRoles() {
+        document.querySelectorAll(MEMBER_SELECTOR).forEach(member => {
+            const name = normaliseIndividualName(getMemberName(member));
+            const role = getSection(member);
+            if (!name || !role) {
+                return;
+            }
+            if (!knownIndividualRoles.has(name)) {
+                knownIndividualRoles.set(name, new Set());
+            }
+            knownIndividualRoles.get(name).add(role);
+        });
+    }
+
+    /** Classifies only roles explicitly learned from a visited group list. */
+    function getKnownIndividualType(name) {
+        const roles = [...(knownIndividualRoles.get(normaliseIndividualName(name)) ?? [])];
+        if (roles.some(role => /leader/i.test(role))) {
+            return "Leader";
+        }
+        return roles.some(role => /\bparent\s+helper\b/i.test(role)) ? "Parent Helper" : "";
+    }
+
+    /** Adds name and learned role filters to the achievement individual selection list. */
+    function enhanceAchievementSearch() {
+        document.querySelectorAll("c-achievement-manager").forEach(manager => {
+            const firstIndividual = manager.querySelector(".individualOptionContainer");
+            let controls = manager.querySelector(".mahi-tahi-helper-achievement-search");
+            if (!firstIndividual) {
+                controls?.remove();
+                return;
+            }
+            if (!controls) {
+                const input = document.createElement("input");
+                input.type = "search";
+                input.className = "slds-input";
+                input.placeholder = "Search by name…";
+                input.setAttribute("aria-label", "Search individuals by name");
+                controls = createControlGroup("Find person", input);
+                controls.classList.add("mahi-tahi-helper-achievement-search");
+                const type = createSelect("Individual type", [["", "All"], ["Leader", "Leader"], ["Parent Helper", "Parent Helper"]]);
+                type.classList.add("mahi-tahi-helper-individual-type");
+                type.addEventListener("change", () => applyAchievementSearch(manager, input.value));
+                const help = document.createElement("span");
+                help.className = "mahi-tahi-helper-label";
+                help.textContent = "Visit group lists first to learn roles. Unknown roles appear only under All. Refreshing clears learned roles.";
+                const wrapper = document.createElement("div");
+                wrapper.className = controls.className;
+                controls.classList.remove("mahi-tahi-helper-achievement-search");
+                wrapper.append(controls, createControlGroup("Type", type), help);
+                controls = wrapper;
+                input.addEventListener("input", () => applyAchievementSearch(manager, input.value));
+                firstIndividual.parentElement.prepend(controls);
+            }
+            applyAchievementSearch(manager, controls.querySelector("input").value);
+        });
+    }
+
+    /** Matches full names using the separate first and last name attributes, ignoring case. */
+    function applyAchievementSearch(manager, value) {
+        const words = value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+        const type = manager.querySelector(".mahi-tahi-helper-individual-type")?.value ?? "";
+        manager.querySelectorAll(".individualOptionContainer").forEach(individual => {
+            const name = `${individual.dataset.firstname ?? ""} ${individual.dataset.lastname ?? ""}`.toLocaleLowerCase();
+            const matchesType = !type || getKnownIndividualType(name) === type;
+            individual.classList.toggle("mahi-tahi-helper-individual-hidden", !matchesType || !words.every(word => name.includes(word)));
+        });
+    }
+
+    /** Adds a status dropdown below each participant list's existing attendee search. */
+    function enhanceAttendeeFilters() {
+        document.querySelectorAll(".participantsDisplayRight").forEach(panel => {
+            const search = panel.querySelector('input[placeholder="Search attendees..."]');
+            const searchControl = search?.closest("lightning-input");
+            if (!searchControl) {
+                return;
+            }
+
+            let select = panel.querySelector(".mahi-tahi-helper-attendee-status");
+            if (!select) {
+                select = createSelect("Attendee status", [
+                    ["", "All"],
+                    ["Attending", "Attending"],
+                    ["Not Attending", "Not Attending"],
+                    ["Invited", "Invited"]
+                ]);
+                select.classList.add("mahi-tahi-helper-attendee-status");
+                const group = createControlGroup("Attendee status", select);
+                group.classList.add("mahi-tahi-helper-attendee-filter");
+                select.addEventListener("change", () => applyAttendeeFilter(panel, select.value));
+                searchControl.insertAdjacentElement("afterend", group);
+            }
+            applyAttendeeFilter(panel, select.value);
+        });
+    }
+
+    /** Filters rendered attendees without changing Salesforce's name search or registration data. */
+    function applyAttendeeFilter(panel, selectedStatus) {
+        const iconStatuses = {
+            "Tick_White.svg": "Attending",
+            "Cross_White.svg": "Not Attending",
+            "Sent_White.svg": "Invited"
+        };
+        panel.querySelectorAll(".attendeeGroupsList c-participant").forEach(participant => {
+            const icon = participant.querySelector('img[alt="Participant Status Icon"]');
+            const filename = icon?.getAttribute("src")?.split(/[?#]/)[0].split("/").at(-1);
+            const hidden = Boolean(selectedStatus) && iconStatuses[filename] !== selectedStatus;
+            participant.classList.toggle("mahi-tahi-helper-attendee-hidden", hidden);
         });
     }
 

@@ -13,6 +13,8 @@ Mahi Tahi is run by Scouts NZ and we have no control over it. This extension onl
 | Groups | "Showing X of Y" counter |
 | Every page | Black quick-links bar (Home, Groups, Programme, Events, Calendar, Invites, Achievements, Services, Training, Workshops, Resources, Activities, Reports, Help) |
 | Events | Create Event shortcut; status checkboxes (Invited / Attending / Not Attending) and live search |
+| Event Participants | Attendee status dropdown below Search attendees: All, Attending, Not Attending or Invited |
+| Achievements | Search individuals by name; filter All / Leader / Parent Helper using roles learned from visited group lists |
 | Reports | Attendance report defaults to current year, term and All Types; direct Term 1-4 attendance links per section |
 | Reports | Single-account reports default to the first account instead of "None" |
 
@@ -24,6 +26,10 @@ See [CHANGELOG.md](CHANGELOG.md) for the full history.
 - The file is created **entirely in your browser** and saved to your Downloads folder. Nothing is sent anywhere.
 - It contains members' names (including youth). Treat it as personal information: store it securely, share it only as your group's privacy policy allows, and delete it when you're finished.
 - Medical and dietary warnings shown on the page are deliberately **not** exported.
+
+### Role filters
+
+Visit your group member lists before using the Achievements type filter. The helper remembers displayed full names and all explicit role labels in the current tab's JavaScript memory. Any role containing "leader" counts as Leader; otherwise an explicit "Parent Helper" role counts as Parent Helper. Unknown roles remain visible under All. Names are matched ignoring case and extra spaces; people with identical full names cannot be distinguished. Roles accumulate during normal portal navigation and clear on refresh or tab closure. No roles are inferred from photographs, saved to browser storage, or sent anywhere.
 
 ## Privacy and permissions
 
