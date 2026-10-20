@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Xero converter test — fake data only</title>
+<link rel="stylesheet" href="/src/styles.css">
+<style>body{font:15px system-ui;margin:20px}input,select{box-sizing:border-box;padding:6px;width:100%}input[type=checkbox]{width:auto}button{margin:8px;padding:8px}label{display:block}summary{padding:6px}</style>
+</head>
+<body><h1>Xero converter test — fake data only</h1><button id="load">Load synthetic CSV files</button><div role="main"></div>
+<script src="/src/invoice-export.js"></script><script src="/src/invoice-ui.js"></script>
+<script>
+document.getElementById('load').addEventListener('click', () => {
+    const files = [
+        ['treasurer-fake.csv', 'First Name,Last Name,Family Contact First Name,Family Contact Last Name,Family Contact Email Address,National Database Number,Billable Status\r\nAlex,Example,Pat,Example,pat@example.invalid,FAKE001,Billable\r\nJamie,Example,Pat,Example,pat@example.invalid,FAKE002,Not Billable\r\nAlex,Example,Pat,Example,pat@example.invalid,FAKE001,Billable\r\n'],
+        ['xero-template-fake.csv', '*ContactName,EmailAddress,*InvoiceNumber,Reference,*InvoiceDate,*DueDate,Total,InventoryItemCode,*Description,*Quantity,*UnitAmount,Discount,*AccountCode,*TaxType,TrackingName1,TrackingOption1,TrackingName2,TrackingOption2,Currency,BrandingTheme\r\n']
+    ];
+    document.querySelectorAll('input[type=file]').forEach((input, index) => {
+        const data = new DataTransfer();
+        data.items.add(new File([files[index][1]], files[index][0], {type:'text/csv'}));
+        input.files = data.files;
+        input.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+});
+</script></body></html>

@@ -1,6 +1,11 @@
-﻿# Changelog
+# Changelog
 
 Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking changes, MINOR for new features, PATCH for fixes (including fixes for Mahi Tahi page changes).
+
+## 1.8.0 - 2026-10-20
+
+- Added a local Treasurer CSV to Xero invoice converter on Reports, with fee, description, account, tax, dates, numbering, editable contact review and duplicate-member checks.
+- Preserves the headings and order of the user's Xero sales invoice template. No data is uploaded or stored.
 
 ## 1.7.0 - 2026-10-20
 

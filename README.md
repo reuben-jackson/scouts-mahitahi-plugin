@@ -17,6 +17,7 @@ Mahi Tahi is run by Scouts NZ and we have no control over it. This extension onl
 | Achievements | Search individuals by name; filter All / Leader / Parent Helper using roles learned from visited group lists |
 | Reports | Attendance report defaults to current year, term and All Types; direct Term 1-4 attendance links per section |
 | Reports | Single-account reports default to the first account instead of "None" |
+| Reports | Treasurer CSV to Xero invoice import: fee, dates, account/tax settings, contact review and duplicate checks |
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
@@ -30,6 +31,24 @@ See [CHANGELOG.md](CHANGELOG.md) for the full history.
 ### Role filters
 
 Visit your group member lists before using the Achievements type filter. The helper remembers displayed full names and all explicit role labels in the current tab's JavaScript memory. Any role containing "leader" counts as Leader; otherwise an explicit "Parent Helper" role counts as Parent Helper. Unknown roles remain visible under All. Names are matched ignoring case and extra spaces; people with identical full names cannot be distinguished. Roles accumulate during normal portal navigation and clear on refresh or tab closure. No roles are inferred from photographs, saved to browser storage, or sent anywhere.
+
+### Xero invoice CSV conversion
+
+On Reports, open **Create Xero invoice import from Treasurer CSV**:
+
+1. Run the Treasurer report and choose **Save as CSV**. Choose that downloaded file in the converter.
+2. In Xero, go to Invoices > Import > Download template file. Choose that sales invoice CSV template in the converter. Its exact headings and order are preserved; any example rows are ignored.
+3. Check the column mappings. Choose whether the billing contact is the family contact or the member. Each selected member gets a separate invoice, including siblings sharing a contact.
+4. Enter the exact account code and tax rate name from your Xero organisation. The defaults are **Term fee**, **140 NZD**, **tax inclusive**, invoice date today and due date today plus 14 calendar days. Tax is not calculated by the converter; Xero calculates it using the selected tax rate and import tax basis.
+5. Set an unused invoice prefix and starting number. The converter cannot check existing invoice numbers or contact records in Xero.
+6. Choose **Review invoices**, correct contact names and email addresses to match Xero, and deselect members who should not be charged. Billing status is shown for review; everyone is initially selected. No discounts or prorating are inferred from source notes.
+7. Confirm the review and download the CSV. Import into Xero with the same tax-inclusive or tax-exclusive choice, then review its draft invoices before approving.
+
+One fee is charged per selected member. Repeated member IDs with identical billing details are collapsed; conflicting duplicates block export. Without an ID, matching full name and email are used for duplicate detection, so check names carefully. The preview reports removed duplicates. Up to 500 invoices are allowed per file, and local input files are limited to 5 MB.
+
+Only names and mapped billing email addresses are exported from the source. Dates of birth, billing comments, medical information and other source columns are excluded. Files and edits remain in this tab's memory and are discarded on leaving Reports or refreshing. There are no network calls, browser storage, accounting logins or extra extension permissions. MYOB Business export is not yet implemented.
+
+See [Xero's import guidance](https://central.xero.com/0/article/Import-customer-invoices-GL). Run `npm test` for synthetic-data conversion tests.
 
 ## Privacy and permissions
 

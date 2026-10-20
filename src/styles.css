@@ -252,3 +252,60 @@ img.customControlApplyIcon {
         flex-direction: column;
     }
 }
+
+.mahi-tahi-helper-invoices {
+    background: #f3f2f2;
+    border: 1px solid #dddbda;
+    border-radius: 4px;
+    color: #181818;
+    margin: 12px;
+    padding: 12px;
+}
+
+.mahi-tahi-helper-invoices summary {
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.mahi-tahi-helper-invoices p {
+    margin: 10px 0;
+}
+
+.mahi-tahi-helper-invoice-fields {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin: 12px 0;
+}
+
+.mahi-tahi-helper-invoice-fields .mahi-tahi-helper-field {
+    min-width: 0;
+}
+
+.mahi-tahi-helper-invoice-preview {
+    max-height: 450px;
+    overflow: auto;
+}
+
+.mahi-tahi-helper-invoice-preview table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.mahi-tahi-helper-invoice-preview th,
+.mahi-tahi-helper-invoice-preview td {
+    border: 1px solid #dddbda;
+    padding: 6px;
+    text-align: left;
+    min-width: 110px;
+}
+
+.mahi-tahi-helper-invoice-preview td:first-child {
+    min-width: 50px;
+}
+
+.mahi-tahi-helper-invoice-confirm {
+    display: block;
+    margin: 14px 0;
+}

@@ -28,7 +28,10 @@ jobs:
           fi
 
       - name: Syntax check
-        run: node --check src/content.js && node --check src/page-hook.js
+        run: node --check src/content.js && node --check src/page-hook.js && node --check src/invoice-export.js && node --check src/invoice-ui.js
+
+      - name: Invoice conversion tests
+        run: npm test
 
       - name: Build and zip
         run: npm run package

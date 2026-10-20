@@ -14,7 +14,7 @@
     {
       "matches": ["https://mahitahi.scouts.nz/*"],
       "css": ["styles.css"],
-      "js": ["content.js"],
+      "js": ["content.js", "invoice-export.js", "invoice-ui.js"],
       "run_at": "document_idle"
     }
   ]

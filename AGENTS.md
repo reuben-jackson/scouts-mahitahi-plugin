@@ -38,7 +38,7 @@ npm run bump -- patch|minor|major
 5. Update README's feature table if features changed.
 6. Releases are cut by pushing a tag `vX.Y.Z` matching `package.json` (see README, "Versioning and releasing"); `.github/workflows/release.yml` builds and publishes. Never upload hand-built zips.
 
-There is no automated test suite (the portal needs a login). `node --check src/content.js` catches syntax errors.
+Run `npm test` for synthetic-data invoice conversion tests. The live portal still needs manual verification with a login. Syntax-check all changed JavaScript files. `node tests/preview-server.mjs` serves a localhost-only converter fixture at http://127.0.0.1:8766/s/reports using fake data only.
 
 ## Code style
 
