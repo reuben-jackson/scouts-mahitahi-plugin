@@ -93,6 +93,18 @@
         return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
     }
 
+    /** Escapes untrusted values before placing them in a standalone HTML invoice. */
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        })[character]);
+    }
+
+    /** Converts multiline plain text to escaped HTML with explicit line breaks. */
+    function multilineHtml(value) {
+        return escapeHtml(value).replace(/\r?\n/g, "<br>");
+    }
+
     /** Maps only billing fields and collapses repeated members with identical billing details. */
     function mapMembers(source, mapping, billTo) {
         const cell = (row, key) => mapping[key] === "" ? "" : (row[Number(mapping[key])] ?? "").trim();
@@ -203,5 +215,66 @@
         return { csv: lines.join("\r\n"), count: rows.length, total: (Number(amount) * rows.length).toFixed(2) };
     }
 
-    globalThis.mahiTahiInvoices = Object.freeze({ parseCsv, readSource, readTemplate, dateInput, xeroDate, daysBetween, mapMembers, createExport, createMyobExport });
+    /** Produces printable HTML invoices and plain-text email drafts without sending data. */
+    function createInvoiceDocuments(members, settings, issuer) {
+        if (!issuer.name.trim()) { throw new Error("Enter the organisation or supplier name in Invoice header details."); }
+        if (!settings.description.trim()) { throw new Error("Enter an invoice line description."); }
+        if (!/^(0|[1-9]\d*)(\.\d{1,2})?$/.test(settings.amount) || Number(settings.amount) <= 0) {
+            throw new Error("Fee must be a positive number with no more than two decimal places.");
+        }
+        if (!/^(0|[1-9]\d*)(\.\d{1,2})?$/.test(issuer.gstRate) || Number(issuer.gstRate) > 100) {
+            throw new Error("GST rate must be between 0 and 100 with no more than two decimal places.");
+        }
+        if (Number(issuer.gstRate) > 0 && !issuer.gstNumber.trim()) {
+            throw new Error("Enter the supplier GST number, or set the GST rate to 0.");
+        }
+        if (!/^\d+$/.test(settings.start) || !Number.isSafeInteger(Number(settings.start)) || Number(settings.start) < 1) {
+            throw new Error("Starting invoice number must be a positive whole number.");
+        }
+        if (!settings.prefix.trim()) { throw new Error("Enter an invoice prefix, unique to this billing run."); }
+        xeroDate(settings.invoiceDate);
+        xeroDate(settings.dueDate);
+        if (settings.dueDate < settings.invoiceDate) { throw new Error("Due date must not precede invoice date."); }
+        const chosen = members.filter(member => member.selected);
+        if (!chosen.length) { throw new Error("Select at least one member."); }
+        if (chosen.length > 500) { throw new Error("Select no more than 500 members per invoice document."); }
+        const amountCents = Math.round(Number(settings.amount) * 100);
+        if (!Number.isSafeInteger(amountCents) || amountCents > 99999999999) { throw new Error("Fee is too large."); }
+        if (!["inclusive", "exclusive"].includes(settings.basis)) { throw new Error("Choose a tax basis."); }
+        if (!Number.isSafeInteger(Number(settings.start) + chosen.length - 1)) { throw new Error("Invoice sequence is too large."); }
+        const gstRate = Number(issuer.gstRate);
+        const gstCents = settings.basis === "inclusive"
+            ? Math.round(amountCents * gstRate / (100 + gstRate))
+            : Math.round(amountCents * gstRate / 100);
+        const totalCents = settings.basis === "inclusive" ? amountCents : amountCents + gstCents;
+        const money = cents => (cents / 100).toFixed(2);
+        const invoices = chosen.map((member, index) => ({
+            contact: member.contact.trim(), email: member.email.trim(), member: member.member,
+            number: `${settings.prefix.trim()}${Number(settings.start) + index}`
+        }));
+        invoices.forEach(invoice => {
+            if (!invoice.contact) { throw new Error(`Enter a billing contact name for ${invoice.member}.`); }
+        });
+        const gstLine = gstRate > 0 ? `<div><span>GST (${escapeHtml(issuer.gstRate)}%)</span><strong>NZD ${money(gstCents)}</strong></div>` : "";
+        const invoiceHtml = invoices.map(invoice => `
+<section class="invoice">
+  <header><div><h1>Invoice</h1><strong>${escapeHtml(issuer.name)}</strong><p>${multilineHtml(issuer.contact)}</p></div><dl><dt>Invoice number</dt><dd>${escapeHtml(invoice.number)}</dd><dt>Invoice date</dt><dd>${escapeHtml(settings.invoiceDate)}</dd><dt>Due date</dt><dd>${escapeHtml(settings.dueDate)}</dd></dl></header>
+  <div class="bill-to"><strong>Bill to</strong><div>${escapeHtml(invoice.contact)}</div>${invoice.email ? `<div>${escapeHtml(invoice.email)}</div>` : ""}</div>
+  <table><thead><tr><th>Description</th><th>Amount</th></tr></thead><tbody><tr><td>${escapeHtml(settings.description.trim())} - ${escapeHtml(invoice.member)}</td><td>NZD ${money(amountCents)}</td></tr></tbody></table>
+  <div class="totals">${gstLine}<div class="total"><span>Total due</span><strong>NZD ${money(totalCents)}</strong></div></div>
+  ${issuer.gstNumber.trim() ? `<p>GST number: ${escapeHtml(issuer.gstNumber.trim())}. ${settings.basis === "inclusive" ? "The amount shown includes GST." : "GST has been added to the amount shown."}</p>` : ""}
+  ${issuer.payment.trim() ? `<div class="payment"><strong>Payment details</strong><p>${multilineHtml(issuer.payment)}</p><p>Reference: ${escapeHtml(invoice.number)}</p></div>` : ""}
+  ${issuer.footer.trim() ? `<footer>${multilineHtml(issuer.footer)}</footer>` : ""}
+</section>`).join("\n");
+        const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoices</title><style>
+body{background:#eee;color:#222;font:15px Arial,sans-serif;margin:0}.invoice{background:#fff;box-sizing:border-box;margin:20px auto;max-width:800px;min-height:1050px;padding:48px}.invoice header{display:flex;justify-content:space-between;gap:30px}.invoice h1{font-size:32px;margin:0 0 20px}.invoice p{line-height:1.5}.invoice dl{display:grid;grid-template-columns:auto auto;gap:8px 20px;margin:0}.invoice dt{font-weight:bold}.invoice dd{margin:0;text-align:right}.bill-to{margin:45px 0 25px}.invoice table{border-collapse:collapse;width:100%}.invoice th,.invoice td{border-bottom:1px solid #ccc;padding:12px;text-align:left}.invoice th:last-child,.invoice td:last-child{text-align:right}.totals{margin:20px 0 20px auto;max-width:300px}.totals div{display:flex;justify-content:space-between;padding:6px}.totals .total{border-top:2px solid #222;font-size:18px}.payment{border-top:1px solid #ccc;margin-top:35px;padding-top:18px}.invoice footer{border-top:1px solid #ccc;margin-top:35px;padding-top:18px}@media print{body{background:#fff}.invoice{margin:0;max-width:none;min-height:0;page-break-after:always}.invoice:last-child{page-break-after:auto}}
+</style></head><body>${invoiceHtml}</body></html>`;
+        const text = invoices.map(invoice => {
+            const gstText = gstRate > 0 ? `\nGST (${issuer.gstRate}%): NZD ${money(gstCents)}\nGST number: ${issuer.gstNumber.trim()}` : "";
+            return `TO: ${invoice.email}\nSUBJECT: Invoice ${invoice.number} from ${issuer.name.trim()}\n\nHello ${invoice.contact},\n\nPlease find the invoice details below.\n\nInvoice: ${invoice.number}\nInvoice date: ${settings.invoiceDate}\nDue date: ${settings.dueDate}\nFor: ${settings.description.trim()} - ${invoice.member}\nAmount: NZD ${money(amountCents)}${gstText}\nTotal due: NZD ${money(totalCents)}\n\n${issuer.payment.trim()}${issuer.payment.trim() ? `\nPayment reference: ${invoice.number}\n` : ""}${issuer.footer.trim() ? `\n${issuer.footer.trim()}\n` : ""}`;
+        }).join(`\n\n${"-".repeat(72)}\n\n`);
+        return { html, text, count: invoices.length, total: money(totalCents * invoices.length) };
+    }
+
+    globalThis.mahiTahiInvoices = Object.freeze({ parseCsv, readSource, readTemplate, dateInput, xeroDate, daysBetween, mapMembers, createExport, createMyobExport, createInvoiceDocuments });
 })();

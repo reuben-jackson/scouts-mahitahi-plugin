@@ -31,7 +31,7 @@ Reports
 - Direct Term 1-4 attendance links for each section
 - Single-account reports default to the first account
 
-Privacy: works only on mahitahi.scouts.nz, needs no permissions, and collects or sends no data. Open source: see the project page.
+Privacy: works only on mahitahi.scouts.nz, uses local extension storage for reusable invoice configuration, and collects or sends no data. Open source: see the project page.
 
 This is an independent community project, not affiliated with or endorsed by Scouts NZ.
 
@@ -39,7 +39,8 @@ This is an independent community project, not affiliated with or endorsed by Sco
 Improve the usability of the Mahi Tahi website (mahitahi.scouts.nz) for Scout leaders by adding sorting, filtering, navigation shortcuts and CSV export.
 
 ## Permission justification
-- Host access to `https://mahitahi.scouts.nz/*` (content scripts): required to add the sorting, filtering, quick-link and export features to Mahi Tahi pages. The extension requests no other permissions.
+- Host access to `https://mahitahi.scouts.nz/*` (content scripts): required to add the sorting, filtering, quick-link and export features to Mahi Tahi pages.
+- Storage: retains reusable invoice configuration such as supplier details and accounting defaults in the user's browser profile. Treasurer files and member details are not stored.
 - Remote code: **No**. All code is bundled in the package.
 
 ## Data usage disclosures (Chrome)

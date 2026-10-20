@@ -7,6 +7,8 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking ch
 - Added MYOB AccountRight Desktop Professional Sales invoice export to the existing Treasurer CSV converter.
 - Validates MYOB customer-name, invoice-number, account, GST and due-term limits and separates invoice transactions with blank rows.
 - Defaults the Treasurer report's Contact First Name and Contact Last Name mappings and Xero's 15% GST on Income tax rate.
+- Added printable HTML invoices and plain-text email drafts, with reusable supplier and accounting settings saved locally in the extension.
+- Organised invoice settings into source, mapping, header, account and numbering sections; fixed Treasurer identity mappings are no longer shown.
 
 ## 1.8.0 - 2026-10-20
 

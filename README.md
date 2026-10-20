@@ -17,7 +17,7 @@ Mahi Tahi is run by Scouts NZ and we have no control over it. This extension onl
 | Achievements | Search individuals by name; filter All / Leader / Parent Helper using roles learned from visited group lists |
 | Reports | Attendance report defaults to current year, term and All Types; direct Term 1-4 attendance links per section |
 | Reports | Single-account reports default to the first account instead of "None" |
-| Reports | Treasurer CSV to Xero or MYOB AccountRight invoice import: fee, dates, account/tax settings, contact review and duplicate checks |
+| Reports | Treasurer CSV to Xero or MYOB AccountRight import, printable HTML invoices and plain-text email drafts |
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
@@ -43,17 +43,18 @@ On Reports, open **Create Xero or MYOB invoice import from Treasurer CSV**:
 5. Set an unused invoice prefix and starting number. AccountRight invoice numbers are limited to eight characters. The converter cannot check existing invoice numbers or contact records in either package.
 6. Choose **Review invoices**, correct the contact details to match existing customer records, and deselect members who should not be charged. Billing status is shown for review; everyone is initially selected. No discounts or prorating are inferred from source notes.
 7. Confirm the review and download the CSV. For Xero, import with the same tax-inclusive or tax-exclusive choice. For AccountRight, import it as comma-separated **Sales > Professional** data with a header record; the file includes blank rows between invoices and converts the chosen due date to a number of days. Review every imported invoice before approving or sending it.
+8. Optionally download a standalone HTML file containing one printable invoice per page, or a text file containing separate email drafts. The extension does not send email; review and send drafts manually.
 
 One fee is charged per selected member. Repeated member IDs with identical billing details are collapsed; conflicting duplicates block export. Without an ID, matching full name and email are used for duplicate detection, so check names carefully. The preview reports removed duplicates. Up to 500 invoices are allowed per file, and local input files are limited to 5 MB.
 
-Only names and mapped billing email addresses are exported from the source. Dates of birth, billing comments, medical information and other source columns are excluded. Files and edits remain in this tab's memory and are discarded on leaving Reports or refreshing. There are no network calls, browser storage, accounting logins or extra extension permissions. The MYOB export targets AccountRight Desktop 2011 or later and requires matching customer cards, account numbers and GST codes to exist already.
+Only names and mapped billing email addresses are exported from the source. Dates of birth, billing comments, medical information and other source columns are excluded. Treasurer files, member details, review edits and generated invoices remain in this tab's memory and are discarded on leaving Reports or refreshing. Reusable configuration such as supplier details, payment instructions, fee defaults and provider-specific account/tax settings is saved in extension-owned local storage. There are no network calls, accounting logins or analytics. The MYOB export targets AccountRight Desktop 2011 or later and requires matching customer cards, account numbers and GST codes to exist already.
 
 See [Xero's import guidance](https://central.xero.com/0/article/Import-customer-invoices-GL) and [MYOB AccountRight's import guidance](https://www.myob.com/nz/support/myob-business/import-export/importing-data?productview=Desktop). Run `npm test` for synthetic-data conversion tests.
 
 ## Privacy and permissions
 
 - Runs only on `https://mahitahi.scouts.nz/*`.
-- Requests **no** browser permissions, has no background process, no analytics, no remote servers and no stored data.
+- Requests only the `storage` permission to retain reusable invoice configuration in the browser profile. It has no background process, analytics or remote servers.
 - Reads only what is already displayed to you on the page, using your existing login.
 - The whole source is in `src/` and is small enough to read; please do.
 

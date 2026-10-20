@@ -3,6 +3,7 @@
   "name": "Mahi Tahi Helper",
   "version": "__VERSION__",
   "description": "Adds navigation, event, sorting, filtering, CSV export and style improvements to Mahi Tahi.",
+  "permissions": ["storage"],
   "icons": { "16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png" },
   "content_scripts": [
     {

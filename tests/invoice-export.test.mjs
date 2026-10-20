@@ -40,6 +40,16 @@ assert.equal(myobRecords[1][7], '4-1000');
 assert.equal(myobRecords[1][13], '14');
 assert.equal(myob.count, 2);
 assert.match(myob.csv, /\r\n\r\n/);
+const issuer = {name:'Example Scout Group',gstNumber:'123-456-789',gstRate:'15',contact:'1 Example Street\nExampletown',payment:'Pay by bank transfer.',footer:'Thank you.'};
+const documents = api.createInvoiceDocuments(mapped.members, settings, issuer);
+assert.equal(documents.count, 2);
+assert.equal(documents.total, '280.00');
+assert.match(documents.html, /<!doctype html>/);
+assert.match(documents.html, /GST \(15%\)/);
+assert.match(documents.html, /NZD 18\.26/);
+assert.match(documents.text, /SUBJECT: Invoice TEST-42 from Example Scout Group/);
+assert.match(documents.text, /------------------------------------------------------------------------/);
+assert.match(api.createInvoiceDocuments(mapped.members, settings, {...issuer, name:'Example <Group>'}).html, /Example &lt;Group&gt;/);
 mapped.members[1].selected = false;
 assert.equal(api.createExport(template, mapped.members, settings).total, '140.00');
 assert.deepEqual(api.parseCsv('a,b\r\n"comma, quote "" test","line\nnext"'), [['a','b'],['comma, quote " test','line\nnext']]);
@@ -56,6 +66,9 @@ for (const change of [{amount:'-1'}, {amount:'140.001'}, {amount:'1e4'}, {amount
 }
 for (const change of [{account:'4000'}, {tax:'TOOLONG'}, {prefix:'TOO-LONG-'}, {dueDate:'2030-01-01'}]) {
     assert.throws(() => api.createMyobExport(mapped.members, {...myobSettings, ...change}));
+}
+for (const badIssuer of [{...issuer,name:''}, {...issuer,gstNumber:''}, {...issuer,gstRate:'101'}]) {
+    assert.throws(() => api.createInvoiceDocuments(mapped.members, settings, badIssuer));
 }
 const conflict = api.readSource(sourceText.replace('Billable,Example Group,01/01/2026,Alex,Example,01/01/2000,Youth,,,,Pat,Example,pat@example.invalid,Family,FAKE001\r\n', 'Billable,Example Group,01/01/2026,Alex,Example,01/01/2000,Youth,,,,Other,Example,other@example.invalid,Family,FAKE001\r\n'));
 assert.throws(() => api.mapMembers(conflict, mapping, 'family'), /Conflicting/);
