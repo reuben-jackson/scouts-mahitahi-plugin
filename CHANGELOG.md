@@ -2,6 +2,12 @@
 
 Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking changes, MINOR for new features, PATCH for fixes (including fixes for Mahi Tahi page changes).
 
+## 1.9.0 - 2026-10-20
+
+- Added MYOB AccountRight Desktop Professional Sales invoice export to the existing Treasurer CSV converter.
+- Validates MYOB customer-name, invoice-number, account, GST and due-term limits and separates invoice transactions with blank rows.
+- Defaults the Treasurer report's Contact First Name and Contact Last Name mappings and Xero's 15% GST on Income tax rate.
+
 ## 1.8.0 - 2026-10-20
 
 - Added a local Treasurer CSV to Xero invoice converter on Reports, with fee, description, account, tax, dates, numbering, editable contact review and duplicate-member checks.

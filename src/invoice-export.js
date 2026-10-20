@@ -75,6 +75,15 @@
         return `${match[3]}/${match[2]}/${match[1]}`;
     }
 
+    /** Returns the number of calendar days between two validated local dates. */
+    function daysBetween(startValue, endValue) {
+        xeroDate(startValue);
+        xeroDate(endValue);
+        const start = new Date(`${startValue}T00:00:00Z`);
+        const end = new Date(`${endValue}T00:00:00Z`);
+        return Math.round((end - start) / 86400000);
+    }
+
     /** Rejects formula-like cells rather than silently changing contact names or accounting codes. */
     function safeCell(value) {
         const text = String(value ?? "");
@@ -104,7 +113,9 @@
                 return;
             }
             seen.set(key, signature);
-            members.push({ member, contact, email, status: cell(row, "status"), selected: true });
+            const contactFirst = billTo === "family" ? cell(row, "familyFirst") : cell(row, "first");
+            const contactLast = billTo === "family" ? cell(row, "familyLast") : cell(row, "last");
+            members.push({ member, contact, contactFirst, contactLast, email, status: cell(row, "status"), selected: true });
         });
         return { members, duplicates };
     }
@@ -146,5 +157,51 @@
         return { csv, count: rows.length, total: (amountCents * rows.length / 100).toFixed(2) };
     }
 
-    globalThis.mahiTahiInvoices = Object.freeze({ parseCsv, readSource, readTemplate, dateInput, xeroDate, mapMembers, createExport });
+    /** Produces AccountRight Professional Sales invoices separated by blank records. */
+    function createMyobExport(members, settings) {
+        if (!settings.description.trim() || !settings.account.trim() || !settings.tax.trim()) {
+            throw new Error("Enter a description, AccountRight account number and GST code.");
+        }
+        if (!/^\d(?:[^\d\r\n])?\d{4}$/.test(settings.account.trim())) {
+            throw new Error("MYOB account number must be five digits, optionally separated after the first digit (for example 4-1000).");
+        }
+        if (!/^[A-Za-z0-9]{1,3}$/.test(settings.tax.trim())) {
+            throw new Error("MYOB GST code must be one to three letters or numbers.");
+        }
+        if (!/^(0|[1-9]\d*)(\.\d{1,2})?$/.test(settings.amount) || Number(settings.amount) <= 0) {
+            throw new Error("Fee must be a positive number with no more than two decimal places.");
+        }
+        const amount = Number(settings.amount).toFixed(2);
+        if (amount.length > 15) { throw new Error("Fee is too large for AccountRight."); }
+        if (!["inclusive", "exclusive"].includes(settings.basis)) { throw new Error("Choose a tax basis."); }
+        if (!/^\d+$/.test(settings.start) || !Number.isSafeInteger(Number(settings.start)) || Number(settings.start) < 1) {
+            throw new Error("Starting invoice number must be a positive whole number.");
+        }
+        const chosen = members.filter(member => member.selected);
+        if (!chosen.length) { throw new Error("Select at least one member."); }
+        if (chosen.length > 500) { throw new Error("Select no more than 500 members per MYOB export."); }
+        const dueDays = daysBetween(settings.invoiceDate, settings.dueDate);
+        if (dueDays < 0) { throw new Error("Due date must not precede invoice date."); }
+        if (dueDays > 999) { throw new Error("MYOB due date must be no more than 999 days after the invoice date."); }
+        const date = xeroDate(settings.invoiceDate);
+        const headers = ["Co./Last Name", "First Name", "Invoice #", "Date", "Inclusive", "Delivery Status", "Description",
+            "Account No.", "Amount", "GST Code", "Sale Status", "Terms - Payment is Due", "Terms - Discount Days", "Terms - Balance Due Days"];
+        const rows = chosen.map((member, index) => {
+            const invoiceNumber = `${settings.prefix.trim()}${Number(settings.start) + index}`;
+            const description = `${settings.description.trim()} - ${member.member}`;
+            if (!member.contactLast.trim()) { throw new Error(`Enter the MYOB company or last name for ${member.member}.`); }
+            if (member.contactLast.trim().length > (member.contactFirst.trim() ? 30 : 50)) { throw new Error(`MYOB company or last name is too long for ${member.member}.`); }
+            if (member.contactFirst.trim().length > 20) { throw new Error(`MYOB first name is too long for ${member.member}.`); }
+            if (invoiceNumber.length > 8) { throw new Error("MYOB invoice numbers can contain no more than eight characters. Shorten the prefix or starting number."); }
+            if (description.length > 255) { throw new Error(`Invoice description is too long for ${member.member}.`); }
+            return [member.contactLast.trim(), member.contactFirst.trim(), invoiceNumber, date,
+                settings.basis === "inclusive" ? "X" : "", "P", description, settings.account.trim(), amount,
+                settings.tax.trim(), "", "2", "0", String(dueDays)];
+        });
+        const lines = [headers.map(safeCell).join(",")];
+        rows.forEach(row => { lines.push(row.map(safeCell).join(","), ""); });
+        return { csv: lines.join("\r\n"), count: rows.length, total: (Number(amount) * rows.length).toFixed(2) };
+    }
+
+    globalThis.mahiTahiInvoices = Object.freeze({ parseCsv, readSource, readTemplate, dateInput, xeroDate, daysBetween, mapMembers, createExport, createMyobExport });
 })();
