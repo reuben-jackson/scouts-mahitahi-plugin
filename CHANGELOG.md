@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking changes, MINOR for new features, PATCH for fixes (including fixes for Mahi Tahi page changes).
 
+## 1.10.0 - 2026-10-23
+
+- Removed the member-list CSV download from Groups. Sorting, filtering, search and the visible-member count remain unchanged.
+- Xero and MYOB invoice CSV exports on Reports remain available.
+
 ## 1.9.0 - 2026-10-20
 
 - Added MYOB AccountRight Desktop Professional Sales invoice export to the existing Treasurer CSV converter.

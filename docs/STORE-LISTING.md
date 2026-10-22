@@ -6,7 +6,7 @@ Text for the Chrome Web Store, Edge Add-ons and Firefox Add-ons. Upload `dist/ma
 Mahi Tahi Helper
 
 ## Summary (max 132 characters)
-Faster Mahi Tahi for Scout leaders: sort, filter and export groups to CSV, quick links, event filters and report shortcuts.
+Faster Mahi Tahi for Scout leaders: sort and filter groups, quick links, event filters, report shortcuts and invoice tools.
 
 ## Category
 Productivity
@@ -17,7 +17,6 @@ Mahi Tahi Helper makes the Scouts NZ Mahi Tahi website quicker and easier to use
 Groups
 - Sort members by last name, first name or section
 - Filter by section and search by name
-- Download CSV of exactly the members currently shown
 
 Everywhere
 - Quick-links bar for Home, Groups, Programme, Events, Calendar, Invites, Achievements, Services, Training, Workshops, Resources, Activities, Reports and Help
@@ -30,13 +29,14 @@ Reports
 - Attendance report defaults to the current year, term and All Types
 - Direct Term 1-4 attendance links for each section
 - Single-account reports default to the first account
+- Create Xero and MYOB invoice CSV exports, printable HTML invoices and text email drafts from a Treasurer CSV
 
 Privacy: works only on mahitahi.scouts.nz, uses local extension storage for reusable invoice configuration, and collects or sends no data. Open source: see the project page.
 
 This is an independent community project, not affiliated with or endorsed by Scouts NZ.
 
 ## Single purpose (Chrome "Privacy practices" tab)
-Improve the usability of the Mahi Tahi website (mahitahi.scouts.nz) for Scout leaders by adding sorting, filtering, navigation shortcuts and CSV export.
+Improve the usability of the Mahi Tahi website (mahitahi.scouts.nz) for Scout leaders by adding sorting, filtering, navigation shortcuts, report tools and local invoice generation.
 
 ## Permission justification
 - Host access to `https://mahitahi.scouts.nz/*` (content scripts): required to add the sorting, filtering, quick-link and export features to Mahi Tahi pages.

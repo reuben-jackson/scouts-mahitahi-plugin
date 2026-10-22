@@ -90,12 +90,6 @@
         sectionSelect.addEventListener("change", () => applyView(memberView));
         searchInput.addEventListener("input", () => applyView(memberView));
 
-        const exportButton = document.createElement("button");
-        exportButton.type = "button";
-        exportButton.className = "mahi-tahi-helper-export slds-button slds-button_neutral";
-        exportButton.textContent = "Download CSV";
-        exportButton.addEventListener("click", () => exportVisibleMembers(memberView));
-
         const count = document.createElement("span");
         count.className = "mahi-tahi-helper-count";
         count.setAttribute("aria-live", "polite");
@@ -104,45 +98,9 @@
             createControlGroup("Sort", sortSelect),
             createControlGroup("Section", sectionSelect),
             createControlGroup("Find", searchInput),
-            exportButton,
             count
         );
         return controls;
-    }
-
-    /** Downloads the members currently shown (after filtering and sorting) as a CSV file. */
-    function exportVisibleMembers(memberView) {
-        const rows = getMembers(memberView)
-            .filter(member => !member.hidden)
-            .map(member => {
-                const name = getMemberName(member);
-                const lastName = getLastName(name);
-                const firstNames = name.slice(0, name.length - lastName.length).trim();
-                return [name, firstNames, lastName, getSection(member)];
-            });
-
-        const csv = buildCsv(["Name", "First name(s)", "Last name", "Section"], rows);
-        // The BOM makes Excel read the file as UTF-8 so macrons (e.g. Māori names) display correctly.
-        const blob = new Blob(["﻿", csv], { type: "text/csv;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `mahi-tahi-members-${new Date().toISOString().slice(0, 10)}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-    }
-
-    /** Builds RFC 4180 CSV text, neutralising spreadsheet formulas in cell values. */
-    function buildCsv(header, rows) {
-        const escapeCell = value => {
-            let text = String(value ?? "");
-            if (/^[=+\-@\t\r]/.test(text)) {
-                text = `'${text}`;
-            }
-            return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
-        };
-        return [header, ...rows].map(row => row.map(escapeCell).join(",")).join("\r\n") + "\r\n";
     }
 
     /** Creates a labelled control group that fits the existing Salesforce styling. */
@@ -218,7 +176,6 @@
         });
 
         controls.querySelector(".mahi-tahi-helper-count").textContent = `Showing ${visibleCount} of ${members.length}`;
-        controls.querySelector(".mahi-tahi-helper-export").disabled = visibleCount === 0;
     }
 
     /** Compares two members using the requested sort mode. */

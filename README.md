@@ -9,7 +9,6 @@ Mahi Tahi is run by Scouts NZ and we have no control over it. This extension onl
 | Where | Feature |
 | --- | --- |
 | Groups | Sort by last name, first name or section; filter by section; search by name |
-| Groups | **Download CSV** of exactly the members currently shown (after your filters and sort) |
 | Groups | "Showing X of Y" counter |
 | Every page | Black quick-links bar (Home, Groups, Programme, Events, Calendar, Invites, Achievements, Services, Training, Workshops, Resources, Activities, Reports, Help) |
 | Events | Create Event shortcut; status checkboxes (Invited / Attending / Not Attending) and live search |
@@ -20,13 +19,6 @@ Mahi Tahi is run by Scouts NZ and we have no control over it. This extension onl
 | Reports | Treasurer CSV to Xero or MYOB AccountRight import, printable HTML invoices and plain-text email drafts |
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
-
-### About the CSV download
-
-- Columns: Name, First name(s), Last name, Section. The first/last split assumes the last word is the surname, so double-barrelled or multi-word surnames may need tidying.
-- The file is created **entirely in your browser** and saved to your Downloads folder. Nothing is sent anywhere.
-- It contains members' names (including youth). Treat it as personal information: store it securely, share it only as your group's privacy policy allows, and delete it when you're finished.
-- Medical and dietary warnings shown on the page are deliberately **not** exported.
 
 ### Role filters
 
