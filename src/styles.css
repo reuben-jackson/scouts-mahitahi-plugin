@@ -115,24 +115,20 @@ img.customControlApplyIcon {
 
 .mahi-tahi-helper-report-shortcuts {
     background: #f3f2f2;
-    border-bottom: 1px solid #dddbda;
+    border: 1px solid #dddbda;
+    border-radius: 4px;
     box-sizing: border-box;
     color: #181818;
-    padding: 12px max(24px, calc((100% - 1180px) / 2));
+    margin: 12px;
+    padding: 12px;
     position: relative;
-    width: 100%;
     z-index: 9999;
 }
 
-.mahi-tahi-helper-report-shortcuts h2 {
-    color: #5f249f;
+.mahi-tahi-helper-report-shortcuts summary {
+    cursor: pointer;
     font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 3px;
-}
-
-.mahi-tahi-helper-report-shortcuts > p {
-    margin: 0 0 9px;
+    font-weight: 600;
 }
 
 .mahi-tahi-helper-report-row {

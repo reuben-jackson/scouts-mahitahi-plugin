@@ -221,9 +221,23 @@
         return parts.at(-1) ?? "";
     }
 
+    /** Returns whether the current route is the login page (or a sub-page of it). */
+    function isLoginPage() {
+        return /^\/s\/login(\/|$)/.test(location.pathname);
+    }
+
     /** Adds an independent quick-links bar before the Salesforce page content. */
     function enhanceQuickLinks() {
-        if (!document.body || document.querySelector(".mahi-tahi-helper-quick-links")) {
+        if (!document.body) {
+            return;
+        }
+
+        const existingBar = document.querySelector(".mahi-tahi-helper-quick-links");
+        if (isLoginPage()) {
+            existingBar?.remove();
+            return;
+        }
+        if (existingBar) {
             return;
         }
 
@@ -552,15 +566,12 @@
             return;
         }
 
-        const panel = document.createElement("section");
+        const panel = document.createElement("details");
         panel.className = "mahi-tahi-helper-report-shortcuts";
-        panel.setAttribute("aria-label", "Direct attendance reports");
 
-        const heading = document.createElement("h2");
-        heading.textContent = "Direct attendance reports";
-        const description = document.createElement("p");
-        description.textContent = "Open an All Types attendance report directly, without using the dropdown form.";
-        panel.append(heading, description);
+        const heading = document.createElement("summary");
+        heading.textContent = "Attendance Reports";
+        panel.appendChild(heading);
 
         const currentYear = new Date().getFullYear();
         const currentTerm = Math.floor(new Date().getMonth() / 3) + 1;

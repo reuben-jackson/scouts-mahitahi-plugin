@@ -14,7 +14,7 @@ Mahi Tahi is run by Scouts NZ and we have no control over it. This extension onl
 | Events | Create Event shortcut; status checkboxes (Invited / Attending / Not Attending) and live search |
 | Event Participants | Attendee status dropdown below Search attendees: All, Attending, Not Attending or Invited |
 | Achievements | Search individuals by name; filter All / Leader / Parent Helper using roles learned from visited group lists |
-| Reports | Attendance report defaults to current year, term and All Types; direct Term 1-4 attendance links per section |
+| Reports | Attendance report defaults to current year, term and All Types; collapsible "Attendance Reports" section with Term 1-4 links per section |
 | Reports | Single-account reports default to the first account instead of "None" |
 | Reports | Treasurer CSV to Xero or MYOB AccountRight import, printable HTML invoices and plain-text email drafts |
 

@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking changes, MINOR for new features, PATCH for fixes (including fixes for Mahi Tahi page changes).
 
+## 1.10.1 - 2026-11-11
+
+- The quick-links bar is no longer shown on the login page (`/s/login/`).
+- Reports: the attendance links are now a collapsible "Attendance Reports" section, styled like the invoice import box, with the "Direct" wording and description removed.
+
 ## 1.10.0 - 2026-10-23
 
 - Removed the member-list CSV download from Groups. Sorting, filtering, search and the visible-member count remain unchanged.
@@ -64,7 +69,7 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking ch
 ## 1.3.0
 
 - Added a Direct attendance reports panel that bypasses the Salesforce Flow form.
-- Added current-year Term 1â€“4 All Types report links for every captured Hawke Sea Scouts section.
+- Added current-year Term 1Ã¢â‚¬â€œ4 All Types report links for every captured Hawke Sea Scouts section.
 - Highlights the current three-month term.
 
 ## 1.2.1
@@ -95,6 +100,6 @@ Versions follow [Semantic Versioning](https://semver.org): MAJOR for breaking ch
 
 - Added the Events-page Create Event shortcut below Overview.
 - Added compact top navigation with Workshops and Online Modules links.
-- Added the requested 30 Ã— 30 status-icon styling.
+- Added the requested 30 Ãƒâ€” 30 status-icon styling.
 - Retained member sorting, section filtering, name search and rerender handling.
 
